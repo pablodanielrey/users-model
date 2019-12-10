@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 EMAILS_API_URL = os.environ['EMAILS_API_URL']
 
 @contextlib.contextmanager
-def obtener_session():
+def open_session():
     engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(
         os.environ['USERS_DB_USER'],
         os.environ['USERS_DB_PASSWORD'],
