@@ -12,8 +12,6 @@ from sqlalchemy import or_, and_
 from sqlalchemy.orm import joinedload, contains_eager
 
 from .MailsModel import MailsModel
-from .exceptions import *
-from .entities import *
 
 
 class UsersModel:
