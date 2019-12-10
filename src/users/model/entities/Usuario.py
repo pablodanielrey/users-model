@@ -9,6 +9,10 @@ class LogUsuario(Base):
 
     __tablename__ = 'log_usuario'
 
+    id = Column(String, primary_key=True, default=generateId)
+    creado = Column(DateTime())
+    actualizado = Column(DateTime())
+
     usuario_id = Column(String, ForeignKey('usuarios.id'))
     autorizador_id = Column(String, ForeignKey('usuarios.id'))
     datos = Column(String)
@@ -17,6 +21,10 @@ class LogUsuario(Base):
 class Mail(Base):
 
     __tablename__ = 'mails'
+
+    id = Column(String, primary_key=True, default=generateId)
+    creado = Column(DateTime())
+    actualizado = Column(DateTime())
 
     email = Column(String)
     confirmado = Column(DateTime)
@@ -31,6 +39,10 @@ class Telefono(Base):
 
     __tablename__ = 'telefonos'
 
+    id = Column(String, primary_key=True, default=generateId)
+    creado = Column(DateTime())
+    actualizado = Column(DateTime())
+
     numero = Column(String)
     tipo = Column(String)
     actualizado = Column(DateTime)
@@ -43,6 +55,10 @@ class Telefono(Base):
 class Usuario(Base):
 
     __tablename__ = 'usuarios'
+    
+    id = Column(String, primary_key=True, default=generateId)
+    creado = Column(DateTime())
+    actualizado = Column(DateTime())
 
     dni = Column(String, unique=True, nullable=False)
     nombre = Column(String)
