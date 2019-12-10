@@ -1,10 +1,9 @@
+import pytz
 from datetime import datetime, time, timedelta
 from sqlalchemy import Column, Integer, String, Date, DateTime, Boolean, func, or_, ForeignKey
 from sqlalchemy.orm import relationship
 
-from model_utils import Base
-import pytz
-
+from . import Base
 
 class LogUsuario(Base):
 
@@ -13,6 +12,32 @@ class LogUsuario(Base):
     usuario_id = Column(String, ForeignKey('usuarios.id'))
     autorizador_id = Column(String, ForeignKey('usuarios.id'))
     datos = Column(String)
+
+
+class Mail(Base):
+
+    __tablename__ = 'mails'
+
+    email = Column(String)
+    confirmado = Column(DateTime)
+    hash = Column(String)
+    eliminado = Column(DateTime)
+
+    usuario_id = Column(String, ForeignKey('usuarios.id'))
+    usuario = relationship('Usuario', back_populates='mails')
+
+
+class Telefono(Base):
+
+    __tablename__ = 'telefonos'
+
+    numero = Column(String)
+    tipo = Column(String)
+    actualizado = Column(DateTime)
+    eliminado = Column(DateTime)
+
+    usuario_id = Column(String, ForeignKey('usuarios.id'))
+    usuario = relationship('Usuario', back_populates='telefonos')
 
 
 class Usuario(Base):
@@ -34,9 +59,6 @@ class Usuario(Base):
 
     eliminado = Column(DateTime)
 
-    google = Column(Boolean)
-    dirty = Column(Boolean)
-
     mails = relationship('Mail', back_populates='usuario')
     telefonos = relationship('Telefono', back_populates='usuario')
     
@@ -50,3 +72,4 @@ class Usuario(Base):
         dt = datetime.combine(fecha, time(0))
         dt = timezone.localize(dt)
         return dt
+
