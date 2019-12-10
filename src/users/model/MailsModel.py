@@ -8,6 +8,13 @@ class MailsModel:
     EMAILS_API_URL = os.environ['EMAILS_API_URL']
     env = Environment(loader=PackageLoader('users.model.templates','.'))
 
+    INTERNAL_DOMAINS = os.environ['INTERNAL_DOMAINS'].split(',')
+
+    @classmethod
+    def _es_dominio_interno(cls, mail):
+        return mail.split('@')[1] in cls.INTERNAL_DOMAINS
+
+
     @classmethod
     def obtener_template(cls, template):
         templ = cls.env.get_template(template)

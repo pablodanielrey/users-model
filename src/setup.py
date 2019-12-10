@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='users-model',
-          version='0.0.5',
+          version='0.0.6',
           description='Modelo de usuarios',
           url='https://github.com/pablodanielrey/users-model',
           author='Desarrollo DiTeSi, FCE',
@@ -16,7 +16,7 @@ setup(name='users-model',
           ],
           packages=find_packages(exclude=['contrib', 'docs', 'test*']),
           install_requires=[
-                            'dateutil',
+                            'dateutils',
                             'requests',
                             'pytz',
                             'psycopg2-binary',
