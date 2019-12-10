@@ -1,9 +1,14 @@
 import pytz
+import uuid
 from datetime import datetime, time, timedelta
 from sqlalchemy import Column, Integer, String, Date, DateTime, Boolean, func, or_, ForeignKey
 from sqlalchemy.orm import relationship
 
 from . import Base
+
+
+def generateId():
+    return str(uuid.uuid4())
 
 class LogUsuario(Base):
 
