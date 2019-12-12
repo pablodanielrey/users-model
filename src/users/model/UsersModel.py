@@ -14,12 +14,14 @@ from .entities.Usuario import Usuario, Mail, Telefono, LogUsuario
 class UsersModel:
 
     @classmethod
-    def get_user(cls, session, uid):
-        assert uid is not None
-        q = session.query(Usuario).filter(Usuario.id == uid)
-        q = q.options(joinedload('mails'), joinedload('telefonos'))
-        u = q.one()
-        return u
+    def get_users(cls, session, uids=[]):
+        users = []
+        for uid in uids:
+            q = session.query(Usuario).filter(Usuario.id == uid)
+            q = q.options(joinedload('mails'), joinedload('telefonos'))
+            u = q.one()
+            users.append(u)
+        return users
 
     @classmethod
     def usuarios_uuids(cls, session):
@@ -29,4 +31,16 @@ class UsersModel:
 
     @classmethod
     def search_user(cls, session, query):
-        return []
+        """
+            retorna los uids que corresponden con la consulta de query
+        """
+        if not query:
+            return []
+        q = session.query(Usuario.id)
+        q = q.filter(or_(\
+            Usuario.dni.op('~*')(query),\
+            Usuario.nombre.op('~*')(query),\
+            Usuario.apellido.op('~*')(query)\
+        ))
+        return q.all()
+
