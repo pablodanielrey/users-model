@@ -26,3 +26,7 @@ class UsersModel:
         q = session.query(Usuario.id).distinct()
         usuarios = [u[0] for u in q]
         return usuarios
+
+    @classmethod
+    def search_user(cls, session, query):
+        return []
