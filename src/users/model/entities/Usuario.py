@@ -10,17 +10,17 @@ from . import Base
 def generateId():
     return str(uuid.uuid4())
 
-class LogUsuario(Base):
+class UsersLog(Base):
 
-    __tablename__ = 'log_usuario'
+    __tablename__ = 'users_log'
 
     id = Column(String, primary_key=True, default=generateId)
-    creado = Column(DateTime())
-    actualizado = Column(DateTime())
+    created = Column(DateTime())
+    updated = Column(DateTime())
 
-    usuario_id = Column(String, ForeignKey('usuarios.id'))
-    autorizador_id = Column(String, ForeignKey('usuarios.id'))
-    datos = Column(String)
+    user_id = Column(String, ForeignKey('users.id'))
+    authorizer_id = Column(String, ForeignKey('users.id'))
+    data = Column(String)
 
 
 class Mail(Base):
@@ -28,69 +28,78 @@ class Mail(Base):
     __tablename__ = 'mails'
 
     id = Column(String, primary_key=True, default=generateId)
-    creado = Column(DateTime())
-    actualizado = Column(DateTime())
+    created = Column(DateTime())
+    updated = Column(DateTime())
+    deleted = Column(DateTime())
 
     email = Column(String)
-    confirmado = Column(DateTime)
-    hash = Column(String)
-    eliminado = Column(DateTime)
+    confirmed = Column(DateTime())
+    hash = Column(String)    
 
-    usuario_id = Column(String, ForeignKey('usuarios.id'))
-    usuario = relationship('Usuario', back_populates='mails')
+    user_id = Column(String, ForeignKey('users.id'))
+    user = relationship('User', back_populates='mails')
 
 
-class Telefono(Base):
+class Phone(Base):
 
-    __tablename__ = 'telefonos'
+    __tablename__ = 'phones'
 
     id = Column(String, primary_key=True, default=generateId)
-    creado = Column(DateTime())
-    actualizado = Column(DateTime())
+    created = Column(DateTime())
+    updated = Column(DateTime())
+    deleted = Column(DateTime())
+    
+    number = Column(String)
+    phone_type = Column(String)
 
-    numero = Column(String)
-    tipo = Column(String)
-    actualizado = Column(DateTime)
-    eliminado = Column(DateTime)
-
-    usuario_id = Column(String, ForeignKey('usuarios.id'))
-    usuario = relationship('Usuario', back_populates='telefonos')
+    user_id = Column(String, ForeignKey('users.id'))
+    user = relationship('User', back_populates='phones')
 
 
-class Usuario(Base):
+class User(Base):
 
-    __tablename__ = 'usuarios'
+    __tablename__ = 'users'
     
     id = Column(String, primary_key=True, default=generateId)
-    creado = Column(DateTime())
-    actualizado = Column(DateTime())
+    created = Column(DateTime())
+    updated = Column(DateTime())
+    deleted = Column(DateTime())
 
-    dni = Column(String, unique=True, nullable=False)
-    nombre = Column(String)
-    apellido = Column(String)
-    genero = Column(String)
-    nacimiento = Column(Date)
-    ciudad = Column(String)
-    pais = Column(String)
-    direccion = Column(String)
-    tipo = Column(String)
-
-    avatar = Column(String)
-    legajo = Column(String, unique=True)
-
-    eliminado = Column(DateTime)
-
-    mails = relationship('Mail', back_populates='usuario')
-    telefonos = relationship('Telefono', back_populates='usuario')
+    last_name = Column(String)
+    first_name = Column(String)
+    person_number_type = Column(String)
+    person_number = Column(String, unique=True, nullable=False)
+    gender = Column(String)
+    marital_status = Column(String)
+    birthplace = Column(String)
+    birthdate = Column(DateTime())
+    residence = Column(String)
+    address = Column(String)
+        
+    mails = relationship('Mail', back_populates='users')
+    phones = relationship('Phone', back_populates='users')
     
-    def obtener_nacimiento(self, tz):
-        return self._localizar_fecha_en_zona(self.nacimiento, tz)
+    def get_birthdate(self, tz):
+        return self._localize_date_on_zone(self.birthdate, tz)
 
-    def _localizar_fecha_en_zona(self, fecha, tz='America/Argentina/Buenos_Aires'):
-        if fecha is None:
+    def _localize_date_on_zone(self, date, tz='America/Argentina/Buenos_Aires'):
+        if date is None:
             return None
         timezone = pytz.timezone(tz)
-        dt = datetime.combine(fecha, time(0))
+        dt = datetime.combine(date, time(0))
         dt = timezone.localize(dt)
         return dt
 
+
+class UserFiles(Base):
+
+    __tablename__ = 'user_files'
+    
+    id = Column(String, primary_key=True, default=generateId)
+    created = Column(DateTime())
+    updated = Column(DateTime())
+    deleted = Column(DateTime())
+
+    mimetype = Column(String)
+    type = Column(String)
+    content = Column(String)
