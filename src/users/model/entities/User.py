@@ -37,7 +37,7 @@ class Mail(Base):
     hash = Column(String)    
 
     user_id = Column(String, ForeignKey('users.id'))
-    user = relationship('User', back_populates='mails')
+    user = relationship('User')
 
 
 class Phone(Base):
@@ -53,7 +53,7 @@ class Phone(Base):
     phone_type = Column(String)
 
     user_id = Column(String, ForeignKey('users.id'))
-    user = relationship('User', back_populates='phones')
+    user = relationship('User')
 
 
 class User(Base):
@@ -76,8 +76,8 @@ class User(Base):
     residence = Column(String)
     address = Column(String)
         
-    mails = relationship('Mail', back_populates='users')
-    phones = relationship('Phone', back_populates='users')
+    mails = relationship('Mail', back_populates='user')
+    phones = relationship('Phone', back_populates='user')
     
     def get_birthdate(self, tz):
         return self._localize_date_on_zone(self.birthdate, tz)
