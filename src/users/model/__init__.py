@@ -24,3 +24,17 @@ def open_session():
     finally:
         session.close()
         engine.dispose()
+
+def create_tables():
+
+    from .entities import Base
+    from .entities.User import User, Mail, Phone, UserFiles
+
+    engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(
+        os.environ['USERS_DB_USER'],
+        os.environ['USERS_DB_PASSWORD'],
+        os.environ['USERS_DB_HOST'],
+        os.environ['USERS_DB_PORT'],
+        os.environ['USERS_DB_NAME']
+    ), echo=True)
+    Base.metadata.create_all(engine)
