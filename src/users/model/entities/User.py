@@ -65,8 +65,8 @@ class User(Base):
     updated = Column(DateTime())
     deleted = Column(DateTime())
 
-    last_name = Column(String)
-    first_name = Column(String)
+    lastname = Column(String)
+    firstname = Column(String)
     person_number_type = Column(String)
     person_number = Column(String, unique=True, nullable=False)
     gender = Column(String)

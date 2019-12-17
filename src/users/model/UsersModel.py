@@ -38,8 +38,8 @@ class UsersModel:
         q = session.query(User.id)
         q = q.filter(or_(\
             User.person_number.op('~*')(query),\
-            User.first_name.op('~*')(query),\
-            User.last_name.op('~*')(query)\
+            User.firstname.op('~*')(query),\
+            User.lastname.op('~*')(query)\
         ))
         return q.all()
 
