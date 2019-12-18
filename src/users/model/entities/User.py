@@ -113,6 +113,9 @@ class User(Base):
         dt = timezone.localize(dt)
         return dt
 
+class UserFileTypes(Enum):
+    PERSONNUMBER = 'PERSONNUMBER'
+    LABORALNUMBER = 'LABORALNUMBER'
 
 class UserFiles(Base):
 
@@ -124,7 +127,7 @@ class UserFiles(Base):
     deleted = Column(DateTime())
 
     mimetype = Column(String)
-    type = Column(String)
+    type = Column(SQLEnum(UserFileTypes))
     content = Column(String)
 
     def __init__(self):

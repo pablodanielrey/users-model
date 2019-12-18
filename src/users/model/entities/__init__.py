@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-from .User import User, Phone, Mail
+from .User import User, Phone, Mail, UserFiles, MailTypes, PhoneTypes, UserFileTypes
 
 def crear_tablas():
     engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(
