@@ -17,8 +17,8 @@ class UsersLog(Base):
     __tablename__ = 'users_log'
 
     id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime())
-    updated = Column(DateTime())
+    created = Column(DateTime(),default=datetime.utcnow())
+    updated = Column(DateTime(),onupdate=datetime.utcnow())
 
     user_id = Column(String, ForeignKey('users.id'))
     authorizer_id = Column(String, ForeignKey('users.id'))
@@ -38,8 +38,8 @@ class Mail(Base):
     __tablename__ = 'mails'
 
     id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime())
-    updated = Column(DateTime())
+    created = Column(DateTime(),default=datetime.utcnow())
+    updated = Column(DateTime(),onupdate=datetime.utcnow())
     deleted = Column(DateTime())
 
     type = Column(SQLEnum(MailTypes))
@@ -62,12 +62,12 @@ class Phone(Base):
     __tablename__ = 'phones'
 
     id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime())
-    updated = Column(DateTime())
+    created = Column(DateTime(),default=datetime.utcnow())
+    updated = Column(DateTime(),onupdate=datetime.utcnow())
     deleted = Column(DateTime())
     
     number = Column(String)
-    type = Column(SQLEnum(MailTypes))
+    type = Column(SQLEnum(PhoneTypes))
 
     user_id = Column(String, ForeignKey('users.id'))
     user = relationship('User')
@@ -81,8 +81,8 @@ class User(Base):
     __tablename__ = 'users'
     
     id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime())
-    updated = Column(DateTime())
+    created = Column(DateTime(),default=datetime.utcnow())
+    updated = Column(DateTime(),onupdate=datetime.utcnow())
     deleted = Column(DateTime())
 
     lastname = Column(String)
@@ -122,8 +122,8 @@ class UserFiles(Base):
     __tablename__ = 'user_files'
     
     id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime())
-    updated = Column(DateTime())
+    created = Column(DateTime(),default=datetime.utcnow())
+    updated = Column(DateTime(),onupdate=datetime.utcnow())
     deleted = Column(DateTime())
 
     mimetype = Column(String)

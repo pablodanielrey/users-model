@@ -14,6 +14,9 @@ class UsersModel:
 
     @classmethod
     def get_users(cls, session, uids=[]):
+        """
+        Obtiene los usuarios correspondientes a los uids proporcionados
+        """
         users = []
         for uid in uids:
             q = session.query(User).filter(User.id == uid)
@@ -43,3 +46,13 @@ class UsersModel:
         ))
         return q.all()
 
+    @classmethod
+    def get_uid_person_number(cls, session, person_number):
+        """
+        Obtiene el uid para ese documento
+        return None en caso que no exista
+        """
+        q = session.query(User.id)
+        q = q.filter(User.person_number == person_number)
+        q = q.filter(User.deleted == None)
+        return q.first()
