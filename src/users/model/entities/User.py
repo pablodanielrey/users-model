@@ -12,20 +12,19 @@ from . import Base
 def generateId():
     return str(uuid.uuid4())
 
+class UserLogTypes(Enum):
+    CREATE = 'CREATE'
+    UPDATE = 'UPDATE'
+    DELETE = 'DELETE'
+
 class UsersLog(Base):
 
     __tablename__ = 'users_log'
 
-    id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime(),default=datetime.utcnow())
-    updated = Column(DateTime(),onupdate=datetime.utcnow())
-
-    user_id = Column(String, ForeignKey('users.id'))
-    authorizer_id = Column(String, ForeignKey('users.id'))
+    type = Column(SQLEnum(UserLogTypes))
+    entity_id = Column(String)
+    authorizer_id = Column(String)
     data = Column(String)
-
-    def __init__(self):
-        self.id = generateId()
 
 
 class MailTypes(Enum):
@@ -37,11 +36,6 @@ class Mail(Base):
 
     __tablename__ = 'mails'
 
-    id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime(),default=datetime.utcnow())
-    updated = Column(DateTime(),onupdate=datetime.utcnow())
-    deleted = Column(DateTime())
-
     type = Column(SQLEnum(MailTypes))
 
     email = Column(String)
@@ -50,8 +44,6 @@ class Mail(Base):
     user_id = Column(String, ForeignKey('users.id'))
     user = relationship('User')
 
-    def __init__(self):
-        self.id = generateId()
 
 class PhoneTypes(Enum):
     CELLPHONE = 'CELLPHONE'
@@ -60,11 +52,6 @@ class PhoneTypes(Enum):
 class Phone(Base):
 
     __tablename__ = 'phones'
-
-    id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime(),default=datetime.utcnow())
-    updated = Column(DateTime(),onupdate=datetime.utcnow())
-    deleted = Column(DateTime())
     
     number = Column(String)
     type = Column(SQLEnum(PhoneTypes))
@@ -72,19 +59,11 @@ class Phone(Base):
     user_id = Column(String, ForeignKey('users.id'))
     user = relationship('User')
 
-    def __init__(self):
-        self.id = generateId()
-
 
 class User(Base):
 
     __tablename__ = 'users'
     
-    id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime(),default=datetime.utcnow())
-    updated = Column(DateTime(),onupdate=datetime.utcnow())
-    deleted = Column(DateTime())
-
     lastname = Column(String)
     firstname = Column(String)
     person_number_type = Column(String)
@@ -99,8 +78,6 @@ class User(Base):
     mails = relationship('Mail', back_populates='user')
     phones = relationship('Phone', back_populates='user')
     
-    def __init__(self):
-        self.id = generateId()
 
     def get_birthdate(self, tz):
         return self._localize_date_on_zone(self.birthdate, tz)
@@ -113,6 +90,9 @@ class User(Base):
         dt = timezone.localize(dt)
         return dt
 
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 class UserFileTypes(Enum):
     PERSONNUMBER = 'PERSONNUMBER'
     LABORALNUMBER = 'LABORALNUMBER'
@@ -120,15 +100,9 @@ class UserFileTypes(Enum):
 class UserFiles(Base):
 
     __tablename__ = 'user_files'
-    
-    id = Column(String, primary_key=True, default=generateId())
-    created = Column(DateTime(),default=datetime.utcnow())
-    updated = Column(DateTime(),onupdate=datetime.utcnow())
-    deleted = Column(DateTime())
 
     mimetype = Column(String)
     type = Column(SQLEnum(UserFileTypes))
     content = Column(String)
 
-    def __init__(self):
-        self.id = generateId()
+    

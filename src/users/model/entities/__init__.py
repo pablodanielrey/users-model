@@ -2,8 +2,6 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
-
 from .User import User, Phone, Mail, UserFiles, MailTypes, PhoneTypes, UserFileTypes
 
 def crear_tablas():
@@ -16,3 +14,15 @@ def crear_tablas():
     ), echo=True)
     Base.metadata.create_all(engine)
 
+class MyBaseClass:
+
+    id = Column(String, primary_key=True, default=generateId)
+    created = Column(DateTime, server_default=func.now())
+    updated = Column(DateTime, onupdate=func.now())
+    deleted = Column(DateTime)
+
+    def __init__(self):
+        self.id = generateId()
+
+#Base = declarative_base(cls=(JsonSerializableBase,MyBaseClass))
+Base = declarative_base(cls=MyBaseClass)
