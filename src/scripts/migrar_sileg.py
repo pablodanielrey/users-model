@@ -8,7 +8,7 @@ from users.model.entities.User import User, PersonNumberTypes
 persons = []
 
 dsn = sys.argv[1]
-con = psycopg2.connect(dsn=dsn)
+con = psycopg2.connect(dsn)
 try:
     cur = con.cursor()
     try:
@@ -17,7 +17,7 @@ try:
             persons.append({
                 'n':p[0],
                 'a':p[1],
-                'd':p[2],
+                'd':str(p[2]),
                 'f':p[3],
                 'c':p[4]
             })
