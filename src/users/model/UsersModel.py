@@ -49,10 +49,7 @@ class UsersModel:
     @classmethod
     def get_uid_person_number(cls, session, person_number):
         """
-        Obtiene el uid para ese documento
-        return None en caso que no exista
+            Obtiene el uid para ese documento
         """
-        q = session.query(User.id)
-        q = q.filter(User.person_number == person_number)
-        q = q.filter(User.deleted == None)
-        return q.first()
+        q = session.query(User.id).filter(User.person_number == person_number, User.deleted == None)
+        return q.one_or_none()

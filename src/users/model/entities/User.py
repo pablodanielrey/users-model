@@ -6,11 +6,8 @@ from sqlalchemy.orm import relationship
 
 from enum import Enum
 
-from . import Base
+from . import Base, generateId
 
-
-def generateId():
-    return str(uuid.uuid4())
 
 class UserLogTypes(Enum):
     CREATE = 'CREATE'
@@ -32,6 +29,7 @@ class MailTypes(Enum):
     INSTITUTIONAL = 'INSTITUTIONAL'
     ALTERNATIVE = 'ALTERNATIVE'
 
+
 class Mail(Base):
 
     __tablename__ = 'mails'
@@ -49,6 +47,7 @@ class PhoneTypes(Enum):
     CELLPHONE = 'CELLPHONE'
     LANDLINE = 'LANDLINE'
 
+
 class Phone(Base):
 
     __tablename__ = 'phones'
@@ -60,13 +59,17 @@ class Phone(Base):
     user = relationship('User')
 
 
+class PersonNumberTypes(Enum):
+    DNI = 'DNI'
+
+
 class User(Base):
 
     __tablename__ = 'users'
     
     lastname = Column(String)
     firstname = Column(String)
-    person_number_type = Column(String)
+    person_number_type = Column(SQLEnum(PersonNumberTypes))
     person_number = Column(String, unique=True, nullable=False)
     gender = Column(String)
     marital_status = Column(String)
