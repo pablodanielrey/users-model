@@ -52,4 +52,7 @@ class UsersModel:
             Obtiene el uid para ese documento
         """
         q = session.query(User.id).filter(User.person_number == person_number, User.deleted == None)
-        return q.one_or_none()
+        u = q.one_or_none()
+        if not u:
+            return None
+        return u.id
