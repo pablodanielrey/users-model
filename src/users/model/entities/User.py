@@ -8,6 +8,8 @@ from enum import Enum
 
 from . import Base, generateId
 
+def generateId():
+    return str(uuid.uuid4())
 
 class UserLogTypes(Enum):
     CREATE = 'CREATE'
@@ -22,6 +24,10 @@ class UsersLog(Base):
     entity_id = Column(String)
     authorizer_id = Column(String)
     data = Column(String)
+
+    def __init__(self):
+        self.id =  generateId()
+        self.created = datetime.utcnow()  
 
 
 class MailTypes(Enum):
@@ -42,6 +48,10 @@ class Mail(Base):
     user_id = Column(String, ForeignKey('users.id'))
     user = relationship('User')
 
+    def __init__(self):
+        self.id =  generateId()
+        self.created = datetime.utcnow()    
+
 
 class PhoneTypes(Enum):
     CELLPHONE = 'CELLPHONE'
@@ -57,6 +67,10 @@ class Phone(Base):
 
     user_id = Column(String, ForeignKey('users.id'))
     user = relationship('User')
+
+    def __init__(self):
+        self.id =  generateId()
+        self.created = datetime.utcnow()   
 
 
 class PersonNumberTypes(Enum):
@@ -80,7 +94,10 @@ class User(Base):
         
     mails = relationship('Mail', back_populates='user')
     phones = relationship('Phone', back_populates='user')
-    
+
+    def __init__(self):
+        self.id =  generateId()
+        self.created = datetime.utcnow()    
 
     def get_birthdate(self, tz):
         return self._localize_date_on_zone(self.birthdate, tz)
@@ -107,5 +124,10 @@ class UserFiles(Base):
     mimetype = Column(String)
     type = Column(SQLEnum(UserFileTypes))
     content = Column(String)
+    user_id = Column(String, ForeignKey('users.id'))
+
+    def __init__(self):
+        self.id =  generateId()
+        self.created = datetime.utcnow()
 
     
