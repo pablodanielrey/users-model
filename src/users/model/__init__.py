@@ -7,34 +7,22 @@ from sqlalchemy.orm import sessionmaker
 
 EMAILS_API_URL = os.environ['EMAILS_API_URL']
 
+engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(
+    os.environ['USERS_DB_USER'],
+    os.environ['USERS_DB_PASSWORD'],
+    os.environ['USERS_DB_HOST'],
+    os.environ['USERS_DB_PORT'],
+    os.environ['USERS_DB_NAME']
+), echo=False)
+
+Session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+session = Session()
+
 @contextlib.contextmanager
 def open_session():
-    engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(
-        os.environ['USERS_DB_USER'],
-        os.environ['USERS_DB_PASSWORD'],
-        os.environ['USERS_DB_HOST'],
-        os.environ['USERS_DB_PORT'],
-        os.environ['USERS_DB_NAME']
-    ), echo=False)
-
-    Session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    session = Session()
     try:
         yield session
     finally:
         session.close()
         engine.dispose()
 
-def create_tables():
-
-    from .entities import Base
-    from .entities.User import User, Mail, Phone, UserFiles
-
-    engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(
-        os.environ['USERS_DB_USER'],
-        os.environ['USERS_DB_PASSWORD'],
-        os.environ['USERS_DB_HOST'],
-        os.environ['USERS_DB_PORT'],
-        os.environ['USERS_DB_NAME']
-    ), echo=True)
-    Base.metadata.create_all(engine)

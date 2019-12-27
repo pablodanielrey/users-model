@@ -6,10 +6,8 @@ from sqlalchemy.orm import relationship
 
 from enum import Enum
 
-from . import Base, generateId
+from . import Base
 
-def generateId():
-    return str(uuid.uuid4())
 
 class UserLogTypes(Enum):
     CREATE = 'CREATE'
@@ -25,10 +23,6 @@ class UsersLog(Base):
     authorizer_id = Column(String)
     data = Column(String)
 
-    def __init__(self):
-        self.id =  generateId()
-        self.created = datetime.utcnow()  
-
 
 class MailTypes(Enum):
     NOTIFICATION = 'NOTIFICATION'
@@ -41,17 +35,10 @@ class Mail(Base):
     __tablename__ = 'mails'
 
     type = Column(SQLEnum(MailTypes))
-
     email = Column(String)
     confirmed = Column(DateTime()) 
-
     user_id = Column(String, ForeignKey('users.id'))
-    user = relationship('User')
-
-    def __init__(self):
-        self.id =  generateId()
-        self.created = datetime.utcnow()    
-
+    
 
 class PhoneTypes(Enum):
     CELLPHONE = 'CELLPHONE'
@@ -66,18 +53,6 @@ class Phone(Base):
     type = Column(SQLEnum(PhoneTypes))
 
     user_id = Column(String, ForeignKey('users.id'))
-    user = relationship('User')
-
-    def __init__(self):
-        self.id =  generateId()
-        self.created = datetime.utcnow()   
-
-
-class PersonNumberTypes(Enum):
-    DNI = 'DNI'
-    LC = 'LC'
-    LE = 'LE'
-    PASSPORT = 'PASSPORT'
 
 
 class User(Base):
@@ -86,8 +61,6 @@ class User(Base):
     
     lastname = Column(String)
     firstname = Column(String)
-    person_number_type = Column(SQLEnum(PersonNumberTypes))
-    person_number = Column(String, unique=True, nullable=False)
     gender = Column(String)
     marital_status = Column(String)
     birthplace = Column(String)
@@ -95,13 +68,10 @@ class User(Base):
     residence = Column(String)
     address = Column(String)
         
-    mails = relationship('Mail', back_populates='user')
-    phones = relationship('Phone', back_populates='user')
+    mails = relationship('Mail')
+    phones = relationship('Phone')
 
-    def __init__(self):
-        self.id =  generateId()
-        self.created = datetime.utcnow()    
-
+    """
     def get_birthdate(self, tz):
         return self._localize_date_on_zone(self.birthdate, tz)
 
@@ -115,22 +85,55 @@ class User(Base):
 
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    """
 
-class UserFileTypes(Enum):
-    PERSONNUMBER = 'PERSONNUMBER'
-    LABORALNUMBER = 'LABORALNUMBER'
 
-class UserFiles(Base):
+class IdentityNumberTypes(Enum):
+    DNI = 'DNI'
+    LC = 'LC'
+    LE = 'LE'
+    PASSPORT = 'PASSPORT'
 
-    __tablename__ = 'user_files'
 
-    mimetype = Column(String)
-    type = Column(SQLEnum(UserFileTypes))
-    content = Column(String)
+class IdentityNumber:
+
+    __tablename__ = 'identity_numbers'
+
+    type = Column(SQLEnum(IdentityNumberTypes))
+    number = Column(String)
+
     user_id = Column(String, ForeignKey('users.id'))
 
-    def __init__(self):
-        self.id =  generateId()
-        self.created = datetime.utcnow()
+    file_id = Column(String, ForeignKey('files.id'))
+    file = relationship('Files')
 
-    
+
+class DegreeTypes(Enum):
+    ELEMENTARY = 'ELEMENTARY'
+    HIGHER = 'HIGHER'
+    COLLEGE = 'COLLEGE'
+    MASTER = 'MASTER'
+    DOCTORAL = 'DOCTORAL'
+
+
+class UserDegree():
+
+    __tablename__ = 'degree'
+
+    type = Column(SQLEnum(DegreeTypes))
+    title = Column(String)
+    start = Column(DateTime)
+
+    user_id = Column(String, ForeignKey('users.id'))
+
+    file_id = Column(String, ForeignKey('files.id'))
+    file = relationship('Files')
+
+
+class File(Base):
+
+    __tablename__ = 'files'
+
+    mimetype = Column(String)
+    content = Column(String)
+   
