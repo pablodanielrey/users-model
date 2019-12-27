@@ -75,6 +75,9 @@ class Phone(Base):
 
 class PersonNumberTypes(Enum):
     DNI = 'DNI'
+    LC = 'LC'
+    LE = 'LE'
+    PASSPORT = 'PASSPORT'
 
 
 class User(Base):
