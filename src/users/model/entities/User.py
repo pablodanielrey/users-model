@@ -94,6 +94,8 @@ class IdentityNumberTypes(Enum):
     LC = 'LC'
     LE = 'LE'
     PASSPORT = 'PASSPORT'
+    CUIL = 'CUIL'
+    CUIT = 'CUIT'
 
 
 class IdentityNumber(Base):
