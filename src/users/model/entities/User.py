@@ -70,6 +70,7 @@ class User(Base):
         
     mails = relationship('Mail')
     phones = relationship('Phone')
+    identity_numbers = relationship('IdentityNumber')
 
     """
     def get_birthdate(self, tz):
@@ -95,7 +96,7 @@ class IdentityNumberTypes(Enum):
     PASSPORT = 'PASSPORT'
 
 
-class IdentityNumber:
+class IdentityNumber(Base):
 
     __tablename__ = 'identity_numbers'
 
@@ -105,7 +106,7 @@ class IdentityNumber:
     user_id = Column(String, ForeignKey('users.id'))
 
     file_id = Column(String, ForeignKey('files.id'))
-    file = relationship('Files')
+    file = relationship('File')
 
 
 class DegreeTypes(Enum):
@@ -116,7 +117,7 @@ class DegreeTypes(Enum):
     DOCTORAL = 'DOCTORAL'
 
 
-class UserDegree():
+class UserDegree(Base):
 
     __tablename__ = 'degree'
 
@@ -127,7 +128,7 @@ class UserDegree():
     user_id = Column(String, ForeignKey('users.id'))
 
     file_id = Column(String, ForeignKey('files.id'))
-    file = relationship('Files')
+    file = relationship('File')
 
 
 class File(Base):

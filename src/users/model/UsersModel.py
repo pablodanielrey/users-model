@@ -8,7 +8,7 @@ import json
 from sqlalchemy import or_, and_
 from sqlalchemy.orm import joinedload, contains_eager
 
-from .entities.User import User, Mail, Phone
+from .entities.User import User, Mail, Phone, IdentityNumber
 
 class UsersModel:
 
@@ -20,7 +20,7 @@ class UsersModel:
         users = []
         for uid in uids:
             q = session.query(User).filter(User.id == uid)
-            q = q.options(joinedload('mails'), joinedload('phones'))
+            q = q.options(joinedload('mails'), joinedload('phones'), joinedload('identity_numbers'))
             u = q.one()
             users.append(u)
         return users
@@ -38,11 +38,11 @@ class UsersModel:
         """
         if not query:
             return []
-        q = session.query(User.id)
+        q = session.query(User.id).join(IdentityNumber)
         q = q.filter(or_(\
-            User.person_number.op('~*')(query),\
             User.firstname.op('~*')(query),\
-            User.lastname.op('~*')(query)\
+            User.lastname.op('~*')(query),\
+            IdentityNumber.number.op('~*')(query)\
         ))
         return q.all()
 
@@ -51,7 +51,7 @@ class UsersModel:
         """
             Obtiene el uid para ese documento
         """
-        q = session.query(User.id).filter(User.person_number == person_number, User.deleted == None)
+        q = session.query(User.id).join(IdentityNumber).filter(IdentityNumber.number == person_number, User.deleted == None, IdentityNumber.deleted == None)
         u = q.one_or_none()
         if not u:
             return None

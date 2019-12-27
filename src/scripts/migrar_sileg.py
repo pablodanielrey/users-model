@@ -1,9 +1,10 @@
 import sys
 import psycopg2
+import uuid
 
 from users.model import open_session
 from users.model.UsersModel import UsersModel
-from users.model.entities.User import User, PersonNumberTypes
+from users.model.entities.User import User, IdentityNumberTypes, IdentityNumber
 
 persons = []
 
@@ -34,15 +35,22 @@ with open_session() as session:
             dni = p['d'].strip()
             user = UsersModel.get_uid_person_number(session, dni)
             if not user:
+                uid = str(uuid.uuid4())
                 print(f"agregando persona {p['n']} {p['a']} {p['d']}")
                 u = User()
+                u.id = uid
                 u.firstname = p['n']
                 u.lastname = p['a']
-                u.person_number = p['d']
-                u.person_number_type = PersonNumberTypes.DNI
                 u.birthdate = p['f']
                 session.add(u)
-                session.commit()
+
+                i = IdentityNumber()
+                i.user_id = uid
+                i.number = p['d'].strip()
+                i.type = IdentityNumberTypes.DNI
+                session.add(i)
+
+            session.commit()
 
         except Exception as e:
             print(e)
