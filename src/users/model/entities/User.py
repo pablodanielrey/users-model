@@ -96,6 +96,7 @@ class IdentityNumberTypes(Enum):
     PASSPORT = 'PASSPORT'
     CUIL = 'CUIL'
     CUIT = 'CUIT'
+    STUDENT = 'STUDENT'
 
 
 class IdentityNumber(Base):
