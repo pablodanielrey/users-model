@@ -56,3 +56,14 @@ class UsersModel:
         if not u:
             return None
         return u.id
+
+    @classmethod
+    def get_uid_person_student(cls, session, student_number):
+        """
+            Obtiene el uid para el legajo
+        """
+        q = session.query(User.id).join(IdentityNumber).filter(IdentityNumber.number == student_number, User.deleted == None, IdentityNumber.deleted == None)
+        u = q.one_or_none()
+        if not u:
+            return None
+        return u.id        
