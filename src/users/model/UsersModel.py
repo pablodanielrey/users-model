@@ -8,7 +8,7 @@ import json
 from sqlalchemy import or_, and_
 from sqlalchemy.orm import joinedload, contains_eager, defer
 
-from .entities.User import User, Mail, Phone, IdentityNumber, UserDegree, File
+from .entities.User import User, Mail, Phone, IdentityNumber, UserDegree, File, UsersLog, UserLogTypes
 
 class UsersModel:
 
@@ -91,15 +91,50 @@ class UsersModel:
         return d
 
     @classmethod
-    def delete_person_degree(cls, session, uid, tid):
+    def delete_person_degree(cls, session, uid, did, authorizer_id):
         """
             Elimina el titulo de la persona
         """
-        t = session.query(UserDegree).filter(UserDegree.deleted == None, UserDegree.id == tid, UserDegree.user_id == uid).first()
-        if t:
-            t.deleted = datetime.datetime.utcnow()
-            session.add(t)
-            return tid
+        d = session.query(UserDegree).filter(UserDegree.deleted == None, UserDegree.id == did, UserDegree.user_id == uid).first()
+        if d:
+            if d.file_id:
+                f = session.query(File).filter(File.deleted == None, File.id == d.file_id).first()
+                if f:
+                    f.deleted = datetime.datetime.utcnow()
+                    session.add(f)
+                    fileToLog = {   'id': f.id,
+                                    'created': f.created,
+                                    'updated': f.updated,
+                                    'deleted': f.deleted,
+                                    'mimetype': f.mimetype,
+                                    'content': f.content
+                                }
+                    fileDeleteLog = UsersLog()
+                    fileDeleteLog.entity_id = f.id
+                    fileDeleteLog.authorizer_id = authorizer_id
+                    fileDeleteLog.type = UserLogTypes.DELETE
+                    fileDeleteLog.data = json.dumps([fileToLog], default=str)
+                    session.add(fileDeleteLog)
+            d.deleted = datetime.datetime.utcnow()
+            session.add(d)
+            degreeToLog = { 'id': d.id,
+                            'created': d.created,
+                            'updated': d.updated,
+                            'deleted': d.deleted,
+                            'type' : d.type,
+                            'title' : d.title,
+                            'start' : d.start,
+                            'user_id' : d.user_id,
+                            'file_id' : d.file_id,
+                        }
+            degreeDeleteLog = UsersLog()
+            degreeDeleteLog.entity_id = did
+            degreeDeleteLog.authorizer_id = authorizer_id
+            degreeDeleteLog.type = UserLogTypes.DELETE
+            degreeDeleteLog.data = json.dumps([degreeToLog],default=str)
+            session.add(degreeDeleteLog)
+            session.commit()
+            return did
         return None
  
     @classmethod
