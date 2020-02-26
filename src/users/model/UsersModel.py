@@ -69,6 +69,17 @@ class UsersModel:
         return u.id
 
     @classmethod
+    def get_person_identityNumber(cls, session, uid,iid):
+        """
+            Obtiene el documento solicitado
+        """
+        q = session.query(IdentityNumber).filter(IdentityNumber.user_id == uid, IdentityNumber.id == iid, IdentityNumber.deleted == None)
+        i = q.one_or_none()
+        if not i:
+            return None
+        return i
+
+    @classmethod
     def get_person_degrees(cls, session, uid):
         """
             Obtiene los titulos para el usuario solicitado
