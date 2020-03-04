@@ -144,8 +144,105 @@ class UsersModel:
             degreeDeleteLog.type = UserLogTypes.DELETE
             degreeDeleteLog.data = json.dumps([degreeToLog],default=str)
             session.add(degreeDeleteLog)
-            session.commit()
             return did
+        return None
+
+    @classmethod
+    def delete_person_idnumber(cls, session, uid, pidnumberid, authorizer_id):
+        """
+            Elimina un documento de la persona
+        """
+        idnumber = session.query(IdentityNumber).filter(IdentityNumber.deleted == None, IdentityNumber.id == pidnumberid, IdentityNumber.user_id == uid).first()
+        if idnumber:
+            if idnumber.file_id:
+                f = session.query(File).filter(File.deleted == None, File.id == d.file_id).first()
+                if f:
+                    f.deleted = datetime.datetime.utcnow()
+                    session.add(f)
+                    fileToLog = {   'id': f.id,
+                                    'created': f.created,
+                                    'updated': f.updated,
+                                    'deleted': f.deleted,
+                                    'mimetype': f.mimetype,
+                                    'content': f.content
+                                }
+                    fileDeleteLog = UsersLog()
+                    fileDeleteLog.entity_id = f.id
+                    fileDeleteLog.authorizer_id = authorizer_id
+                    fileDeleteLog.type = UserLogTypes.DELETE
+                    fileDeleteLog.data = json.dumps([fileToLog], default=str)
+                    session.add(fileDeleteLog)
+            idnumber.deleted = datetime.datetime.utcnow()
+            session.add(idnumber)
+            idnumberToLog = { 'id': idnumber.id,
+                            'created': idnumber.created,
+                            'updated': idnumber.updated,
+                            'deleted': idnumber.deleted,
+                            'type' : idnumber.type,
+                            'number' : idnumber.number,
+                            'user_id' : idnumber.user_id,
+                            'file_id' : idnumber.file_id,
+                        }
+            idnumberToLog = UsersLog()
+            idnumberToLog.entity_id = pidnumberid
+            idnumberToLog.authorizer_id = authorizer_id
+            idnumberToLog.type = UserLogTypes.DELETE
+            idnumberToLog.data = json.dumps([idnumberToLog],default=str)
+            session.add(idnumberToLog)
+            return idnumber.id
+        return None
+    
+    @classmethod
+    def delete_person_mail(cls, session, uid, pmid, authorizer_id):
+        """
+            Elimina un mail de la persona
+        """
+        pm = session.query(Mail).filter(Mail.deleted == None, Mail.id == pmid, Mail.user_id == uid).first()
+        if pm:
+            pm.deleted = datetime.datetime.utcnow()
+            session.add(pm)
+            mailDeleteLog ={ 'id': pm.id,
+                          'created': pm.created,
+                          'updated': pm.updated,
+                          'deleted': pm.deleted,
+                          'type': pm.type.value,
+                          'email': pm.email,
+                          'confirmed': pm.confirmed,
+                          'user_id': pm.user_id,
+            }
+            mailDeleteLog = UsersLog()
+            mailDeleteLog.entity_id = pmid
+            mailDeleteLog.authorizer_id = authorizer_id
+            mailDeleteLog.type = UserLogTypes.DELETE
+            mailDeleteLog.data = json.dumps([mailDeleteLog],default=str)
+            session.add(mailDeleteLog)
+            return pm.id
+        return None
+    
+    @classmethod
+    def delete_person_phone(cls, session, uid, phid, authorizer_id):
+        """
+            Elimina un teléfono de la persona
+        """
+        ph = session.query(Phone).filter(Phone.deleted == None, Phone.id == phid, Phone.user_id == uid).first()
+        if ph:
+            ph.deleted = datetime.datetime.utcnow()
+            session.add(ph)
+            phoneDeleteLog ={ 'id': ph.id,
+                          'created': ph.created,
+                          'updated': ph.updated,
+                          'deleted': ph.deleted,
+                          'type': ph.type.value,
+                          'number': ph.number,
+                          'user_id': ph.user_id,
+            }
+            phoneDeleteLog = UsersLog()
+            phoneDeleteLog.entity_id = phid
+            phoneDeleteLog.authorizer_id = authorizer_id
+            phoneDeleteLog.type = UserLogTypes.DELETE
+            phoneDeleteLog.data = json.dumps([phoneDeleteLog],default=str)
+            session.add(phoneDeleteLog)
+            return ph.id
         return None
  
     @classmethod
