@@ -183,12 +183,12 @@ class UsersModel:
                             'user_id' : idnumber.user_id,
                             'file_id' : idnumber.file_id,
                         }
-            idnumberToLog = UsersLog()
-            idnumberToLog.entity_id = pidnumberid
-            idnumberToLog.authorizer_id = authorizer_id
-            idnumberToLog.type = UserLogTypes.DELETE
-            idnumberToLog.data = json.dumps([idnumberToLog],default=str)
-            session.add(idnumberToLog)
+            newLog = UsersLog()
+            newLog.entity_id = pidnumberid
+            newLog.authorizer_id = authorizer_id
+            newLog.type = UserLogTypes.DELETE
+            newLog.data = json.dumps([idnumberToLog],default=str)
+            session.add(newLog)
             return idnumber.id
         return None
     
@@ -210,12 +210,12 @@ class UsersModel:
                           'confirmed': pm.confirmed,
                           'user_id': pm.user_id,
             }
-            mailDeleteLog = UsersLog()
-            mailDeleteLog.entity_id = pmid
-            mailDeleteLog.authorizer_id = authorizer_id
-            mailDeleteLog.type = UserLogTypes.DELETE
-            mailDeleteLog.data = json.dumps([mailDeleteLog],default=str)
-            session.add(mailDeleteLog)
+            newLog = UsersLog()
+            newLog.entity_id = pmid
+            newLog.authorizer_id = authorizer_id
+            newLog.type = UserLogTypes.DELETE
+            newLog.data = json.dumps([mailDeleteLog],default=str)
+            session.add(newLog)
             return pm.id
         return None
     
@@ -236,12 +236,12 @@ class UsersModel:
                           'number': ph.number,
                           'user_id': ph.user_id,
             }
-            phoneDeleteLog = UsersLog()
-            phoneDeleteLog.entity_id = phid
-            phoneDeleteLog.authorizer_id = authorizer_id
-            phoneDeleteLog.type = UserLogTypes.DELETE
-            phoneDeleteLog.data = json.dumps([phoneDeleteLog],default=str)
-            session.add(phoneDeleteLog)
+            newLog = UsersLog()
+            newLog.entity_id = phid
+            newLog.authorizer_id = authorizer_id
+            newLog.type = UserLogTypes.DELETE
+            newLog.data = json.dumps([phoneDeleteLog],default=str)
+            session.add(newLog)
             return ph.id
         return None
  
