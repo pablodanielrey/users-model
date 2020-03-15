@@ -40,6 +40,7 @@ class UsersModel:
             return []
         q = session.query(User.id).join(IdentityNumber)
         q = q.filter(or_(\
+            User.id.op('~*')(query), \
             User.firstname.op('~*')(query),\
             User.lastname.op('~*')(query),\
             IdentityNumber.number.op('~*')(query)\
