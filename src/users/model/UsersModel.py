@@ -4,6 +4,7 @@ import datetime
 import base64
 import logging
 import json
+import logging
 
 from sqlalchemy import or_, and_
 from sqlalchemy.orm import joinedload, contains_eager, defer
@@ -19,10 +20,15 @@ class UsersModel:
         """
         users = []
         for uid in uids:
-            q = session.query(User).filter(User.id == uid)
-            q = q.options(joinedload('mails'), joinedload('phones'), joinedload('identity_numbers'))
-            u = q.one()
-            users.append(u)
+            try:
+                q = session.query(User).filter(User.id == uid)
+                q = q.options(joinedload('mails'), joinedload('phones'), joinedload('identity_numbers'))
+                u = q.one()
+                users.append(u)
+            except Exception as e:
+                logging.error(f"error obteniendo el usuario para {uid}")
+                logging.exception(e)
+                raise e
         return users
 
     @classmethod
