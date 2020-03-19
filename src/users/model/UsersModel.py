@@ -262,3 +262,7 @@ class UsersModel:
         if count:
             q = q.limit(count)
         return q.all()
+
+    @classmethod
+    def get_log(cls, session, lid):
+        return session.query(UsersLog).filter(UsersLog.id == lid).one_or_none()
