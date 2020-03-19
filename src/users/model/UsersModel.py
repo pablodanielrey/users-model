@@ -6,7 +6,7 @@ import logging
 import json
 import logging
 
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, desc
 from sqlalchemy.orm import joinedload, contains_eager, defer
 
 from .entities.User import User, Mail, Phone, IdentityNumber, UserDegree, File, UsersLog, UserLogTypes
@@ -255,3 +255,10 @@ class UsersModel:
     @classmethod
     def get_file(cls, session, fid):
         return session.query(File).filter(File.id == fid).options(defer('content')).one_or_none()       
+
+    @classmethod
+    def get_logs(cls, session, count=None):
+        q = session.query(UsersLog).order_by(UsersLog.created.desc())
+        if count:
+            q = q.limit(count)
+        return q.all()

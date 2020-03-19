@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='users-model',
-          version='1.0.8',
+          version='1.0.9',
           description='Modelo de usuarios',
           url='https://github.com/pablodanielrey/users-model',
           author='Desarrollo DiTeSi, FCE',
