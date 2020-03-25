@@ -120,13 +120,16 @@ class UsersModel:
                 if f:
                     f.deleted = datetime.datetime.utcnow()
                     session.add(f)
-                    fileToLog = {   'id': f.id,
-                                    'created': f.created,
-                                    'updated': f.updated,
-                                    'deleted': f.deleted,
-                                    'mimetype': f.mimetype,
-                                    'content': f.content
-                                }
+                    fileToLog = {
+                        'file' : {
+                            'id': f.id,
+                            'created': f.created,
+                            'updated': f.updated,
+                            'deleted': f.deleted,
+                            'mimetype': f.mimetype,
+                            'content': f.content
+                        }
+                    }
                     fileDeleteLog = UsersLog()
                     fileDeleteLog.entity_id = f.id
                     fileDeleteLog.authorizer_id = authorizer_id
@@ -135,16 +138,19 @@ class UsersModel:
                     session.add(fileDeleteLog)
             d.deleted = datetime.datetime.utcnow()
             session.add(d)
-            degreeToLog = { 'id': d.id,
-                            'created': d.created,
-                            'updated': d.updated,
-                            'deleted': d.deleted,
-                            'type' : d.type,
-                            'title' : d.title,
-                            'start' : d.start,
-                            'user_id' : d.user_id,
-                            'file_id' : d.file_id,
-                        }
+            degreeToLog = { 
+                'degree' : {
+                    'id': d.id,
+                    'created': d.created,
+                    'updated': d.updated,
+                    'deleted': d.deleted,
+                    'type' : d.type,
+                    'title' : d.title,
+                    'start' : d.start,
+                    'user_id' : d.user_id,
+                    'file_id' : d.file_id,
+                }
+            }
             degreeDeleteLog = UsersLog()
             degreeDeleteLog.entity_id = did
             degreeDeleteLog.authorizer_id = authorizer_id
@@ -166,13 +172,16 @@ class UsersModel:
                 if f:
                     f.deleted = datetime.datetime.utcnow()
                     session.add(f)
-                    fileToLog = {   'id': f.id,
-                                    'created': f.created,
-                                    'updated': f.updated,
-                                    'deleted': f.deleted,
-                                    'mimetype': f.mimetype,
-                                    'content': f.content
-                                }
+                    fileToLog = {
+                        'file': {
+                            'id': f.id,
+                            'created': f.created,
+                            'updated': f.updated,
+                            'deleted': f.deleted,
+                            'mimetype': f.mimetype,
+                            'content': f.content
+                        }
+                    }
                     fileDeleteLog = UsersLog()
                     fileDeleteLog.entity_id = f.id
                     fileDeleteLog.authorizer_id = authorizer_id
@@ -181,15 +190,18 @@ class UsersModel:
                     session.add(fileDeleteLog)
             idnumber.deleted = datetime.datetime.utcnow()
             session.add(idnumber)
-            idnumberToLog = { 'id': idnumber.id,
-                            'created': idnumber.created,
-                            'updated': idnumber.updated,
-                            'deleted': idnumber.deleted,
-                            'type' : idnumber.type,
-                            'number' : idnumber.number,
-                            'user_id' : idnumber.user_id,
-                            'file_id' : idnumber.file_id,
-                        }
+            idnumberToLog = {
+                'identity_number' : {
+                    'id': idnumber.id,
+                    'created': idnumber.created,
+                    'updated': idnumber.updated,
+                    'deleted': idnumber.deleted,
+                    'type' : idnumber.type,
+                    'number' : idnumber.number,
+                    'user_id' : idnumber.user_id,
+                    'file_id' : idnumber.file_id,
+                }
+            }
             newLog = UsersLog()
             newLog.entity_id = pidnumberid
             newLog.authorizer_id = authorizer_id
@@ -208,14 +220,17 @@ class UsersModel:
         if pm:
             pm.deleted = datetime.datetime.utcnow()
             session.add(pm)
-            mailDeleteLog ={ 'id': pm.id,
-                          'created': pm.created,
-                          'updated': pm.updated,
-                          'deleted': pm.deleted,
-                          'type': pm.type.value,
-                          'email': pm.email,
-                          'confirmed': pm.confirmed,
-                          'user_id': pm.user_id,
+            mailDeleteLog = {
+                'mail' : { 
+                    'id': pm.id,
+                    'created': pm.created,
+                    'updated': pm.updated,
+                    'deleted': pm.deleted,
+                    'type': pm.type.value,
+                    'email': pm.email,
+                    'confirmed': pm.confirmed,
+                    'user_id': pm.user_id,
+                }
             }
             newLog = UsersLog()
             newLog.entity_id = pmid
@@ -235,13 +250,16 @@ class UsersModel:
         if ph:
             ph.deleted = datetime.datetime.utcnow()
             session.add(ph)
-            phoneDeleteLog ={ 'id': ph.id,
-                          'created': ph.created,
-                          'updated': ph.updated,
-                          'deleted': ph.deleted,
-                          'type': ph.type.value,
-                          'number': ph.number,
-                          'user_id': ph.user_id,
+            phoneDeleteLog = {
+                'phone' : {
+                    'id': ph.id,
+                    'created': ph.created,
+                    'updated': ph.updated,
+                    'deleted': ph.deleted,
+                    'type': ph.type.value,
+                    'number': ph.number,
+                    'user_id': ph.user_id,
+                }
             }
             newLog = UsersLog()
             newLog.entity_id = phid
