@@ -38,13 +38,18 @@ class UsersModel:
         return Users
 
     @classmethod
-    def search_user(cls, session, query):
+    def search_user(cls, session, query, deleted=False):
         """
             retorna los uids que corresponden con la consulta de query
+            historic y deleted --> son inclusivos.
         """
         if not query:
             return []
         q = session.query(User.id).join(IdentityNumber)
+
+        if not deleted:
+            q = q.filter(User.deleted == None)
+
         q = q.filter(or_(\
             User.id.op('~*')(query), \
             User.firstname.op('~*')(query),\

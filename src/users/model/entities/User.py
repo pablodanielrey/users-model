@@ -1,12 +1,25 @@
 import pytz
 import uuid
+from enum import Enum
 from datetime import datetime, time, timedelta
 from sqlalchemy import Column, Integer, String, Date, DateTime, Boolean, func, or_, ForeignKey, Enum as SQLEnum
 from sqlalchemy.orm import relationship
 
-from enum import Enum
-
 from . import Base
+
+from pulsar.schema import JsonSchema, Record, String as  PString
+
+
+class UserEventTypes(Enum):
+    CREATED = 'CREATED'
+    UPDATED = 'UPDATED'
+    DELETED = 'DELETED'
+
+class UserEvent(Record):
+    """ Evento para pulsar """
+    type_ = PString()
+    user = PString()
+
 
 
 class UserLogTypes(Enum):
@@ -22,7 +35,6 @@ class UsersLog(Base):
     entity_id = Column(String)
     authorizer_id = Column(String)
     data = Column(String)
-
 
 class MailTypes(Enum):
     NOTIFICATION = 'NOTIFICATION'
