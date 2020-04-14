@@ -184,7 +184,7 @@ class UsersModel:
         idnumber = session.query(IdentityNumber).filter(IdentityNumber.deleted == None, IdentityNumber.id == pidnumberid, IdentityNumber.user_id == uid).first()
         if idnumber:
             if idnumber.file_id:
-                f = session.query(File).filter(File.deleted == None, File.id == d.file_id).first()
+                f = session.query(File).filter(File.deleted == None, File.id == idnumber.file_id).first()
                 if f:
                     f.deleted = datetime.datetime.utcnow()
                     session.add(f)
