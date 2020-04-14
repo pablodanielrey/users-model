@@ -70,6 +70,17 @@ class UsersModel:
         return u.id
 
     @classmethod
+    def get_uid_email(cls, session, email):
+        """
+            Obtiene el uid para ese email
+        """
+        q = session.query(User.id).join(Mail).filter(Mail.email == email, User.deleted == None, Mail.deleted == None)
+        u = q.one_or_none()
+        if not u:
+            return None
+        return u.id
+
+    @classmethod
     def get_uid_person_student(cls, session, student_number):
         """
             Obtiene el uid para el legajo
